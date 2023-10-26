@@ -6,9 +6,9 @@ module.exports = Object.freeze({
     inValidToken: 'Your session has expired. Please login again to continue.',
 
     //S3 AWS Bucket Credentials
-    S3_BUCKET_NAME: 'dutchuppblob',
-    S3_IAM_USER_KEY: 'AKIAQ2PNGS2LKUYWBCFK',
-    S3_IAM_USER_SECRET: '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',
+    S3_BUCKET_NAME:'dutchuppblob',
+    S3_IAM_USER_KEY:'AKIAQ2PNGS2LK5VNOOGC',
+    S3_IAM_USER_SECRET:'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',
 
     awsBucketLocationProfile: 'https://dutchuppblob.s3.amazonaws.com/',
     blobRouter: '/router/blob/uploadfile',

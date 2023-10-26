@@ -36,6 +36,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use('/router', router);
 app.use(express.json());
+// app.use(express.urlencoded({ extended: true }));
 
 app.set('port', process.env.PORT || 3000);
 app.listen(port, () => console.log(`Express server listening on port ${port}`));
@@ -58,7 +59,9 @@ var upload = multer({
     storage: multerS3({
         s3: s3,
         bucket: constants.S3_BUCKET_NAME,
+        acl: 'public-read',
         metadata: function (req, file, cb) {
+            console.log("fd",req)
             cb(null, { fieldName: file.fieldname });
         },
         key: function (req, file, cb) {
@@ -68,8 +71,9 @@ var upload = multer({
     })
 })
 
-app.post(constants.blobRouter, upload.single('myFile'), (req, res, next) => {
+app.post(constants.blobRouter, upload.array('myFile'), (req, res, next) => {
     const file = req.file
+    console.log(req)
     if (!file) {
         console.log("Error during file uploading")
     } else {

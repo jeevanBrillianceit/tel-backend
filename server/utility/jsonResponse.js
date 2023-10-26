@@ -11,11 +11,11 @@
            });
            res.end();          
         },
-        errorHandler: (res, next, response) => {
-            
-            res.status(400).send({
+        errorHandler: (res, next, response,statusCode=400) => {
+            res.status(statusCode).send({
                 "status": 0,
-                "response": response
+                "response": response,
+                
             });
             res.end();   
         }        
