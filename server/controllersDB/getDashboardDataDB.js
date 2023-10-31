@@ -1,3 +1,4 @@
+const statusCode = require('http-status-codes')
 const sqlConnect = require('../database/connection');
 const genericFunc = require('../utility/genericFunctions');
 const jsonResponse = require('../utility/jsonResponse')
@@ -9,8 +10,8 @@ const getDashboardDataDB = () => {
             const successFn = (result) => {
                 jsonResponse.successHandler(res, next, result)
             }
-            const errFn = (err) => {
-                jsonResponse.errorHandler(res, next, err)
+            const errFn = (err,statusCode) => {
+                jsonResponse.errorHandler(res, next, err,statusCode)
             }
 
             if (genericFunc.checkEmptyNull('userId', req.user.id, errFn) == true) return
@@ -35,7 +36,7 @@ const getDashboardDataDB = () => {
                             response = {
                                 'message': data.message
                             }
-                            errFn(response);
+                            errFn(response,statusCode.StatusCodes.UNAUTHORIZED);
                         }
                     }
                 }

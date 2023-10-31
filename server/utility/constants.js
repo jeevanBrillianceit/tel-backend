@@ -4,6 +4,7 @@ module.exports = Object.freeze({
     appName: process.env.APP_NAME,
     JWTokenKey: process.env.ACCESS_TOKEN_SECRET,
     inValidToken: 'Your session has expired. Please login again to continue.',
+    authenticationFailed:'Authentication Failed',
 
     //S3 AWS Bucket Credentials
     S3_BUCKET_NAME:'dutchuppblob',

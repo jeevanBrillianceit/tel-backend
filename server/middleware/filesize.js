@@ -6,8 +6,8 @@ const checkFileSizeBasedOnType =  (req, res, next) => {
     const successFn = (result) => {
       jsonResponse.successHandler(res, next, result);
     };
-    const errFn = (err) => {
-      jsonResponse.errorHandler(res, next, err);
+    const errFn = (err, statusCode) => {
+      jsonResponse.errorHandler(res, next, err,statusCode);
     };
   
     if (!files || !Array.isArray(files)) {

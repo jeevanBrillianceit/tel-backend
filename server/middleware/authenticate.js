@@ -1,8 +1,15 @@
 const jwt = require('jsonwebtoken');
 const constants = require('../utility/constants')
-const jsonResponse = require('../utility/jsonResponse')
+const jsonResponse = require('../utility/jsonResponse');
+const statusCode  = require('http-status-codes');
 
 const authenticate = (req, res, next) => {
+
+    const errFn = (err, statusCode) => {
+        console.log(err)
+        jsonResponse.errorHandler(res, next, err,statusCode);
+      };
+
     try {
         // const token = req.headers.authorization.split('')[1]
         const token = req.headers.token
@@ -12,10 +19,26 @@ const authenticate = (req, res, next) => {
         next()
         
     } catch (error) {
+    //      response = {
+    //         message: constants.inValidToken 
+    //     }
+    //    errFn(response, statusCode.StatusCodes.UNAUTHORIZED)
+    if (error.name == "TokenExpiredError") {
+       const response = {
+                    message: constants.inValidToken 
+                }
+                console.log("gd")
+        errFn(response, statusCode.StatusCodes.UNAUTHORIZED)
+    } else {
         const response = {
-            'message': constants.inValidToken 
+            message: constants.authenticationFailed
         }
-        jsonResponse.errorHandler(res, next, response)
+        errFn(response, statusCode.StatusCodes.NON_AUTHORITATIVE_INFORMATION)
+        console.log("gda")
+
+    }
+
+
     }
 }
 

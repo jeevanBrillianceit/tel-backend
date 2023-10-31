@@ -25,9 +25,7 @@ const createChallangeDB = () => {
       const { error } = schema.validate(reqBody);
       if (error) {
         var message =
-          error &&
-          error.details &&
-          error.details.length > 0 &&
+        error?.details?.length &&
           error.details[0].message
             ? error.details[0].message
             : "Missing Fields";
@@ -83,7 +81,6 @@ const createChallangeDB = () => {
           ),
           genericFunc.inputparams("time", dataTypeEnum.time, req.body.time),
         ];
-
         sqlConnect.connectDb(
           req,
           errFn,
