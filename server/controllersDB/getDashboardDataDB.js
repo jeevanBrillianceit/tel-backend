@@ -21,15 +21,16 @@ const getDashboardDataDB = () => {
                 genericFunc.inputparams('userId', dataTypeEnum.varChar, req.user.id)
             ]
 
-            sqlConnect.connectDb(req, errFn, procedureEnum.proc_get_dashboard_data, inputObject, errorEnum.proc_get_dashboard_data, function (result) {
+            sqlConnect.connectDb(req, errFn, procedureEnum.proc_get_dashboard_data, inputObject, errorEnum.proc_get_dashboard_data, async function (result) {
                 if (result.length > 0) {
                     if (result[0]) {
-                        let data = result[0]
+                        let data = result[0]                     
                         if (data[0].message === 'Success') {
+                      const newarray =  await findDuplicates(result[0])
                             response = {
                                 'message': data.message,
                                 // 'token': genericFunc.generateTokenLink(data),
-                                'data': result[0]
+                                'data': newarray
                             }
                             successFn(response);
                         } else {
@@ -44,4 +45,25 @@ const getDashboardDataDB = () => {
         }
     }
 }
+
+const findDuplicates = async (data) => {
+    const output = {};
+  
+    data.forEach(obj => {
+      const key = obj.challenge_id;
+      if (!output[key]) {
+        output[key] = [];
+      }
+      const convertedObj = obj.constructor.name === 'RowDataPacket' ? { ...obj } : obj;
+    output[key].push(convertedObj);
+  });
+   
+  
+    const resultArrays = Object.values(output).map((arr, id) => ({
+        id,
+        inner: arr
+      }));
+ 
+    return resultArrays.reverse();
+  }
 module.exports = getDashboardDataDB();
