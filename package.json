@@ -11,11 +11,13 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@api.video/nodejs-client": "^2.5.4",
     "@ffmpeg-installer/ffmpeg": "^1.1.0",
     "aws-sdk": "^2.1048.0",
-    "axios": "^1.5.1",
+    "axios": "^1.6.2",
     "body-parser": "^1.19.1",
     "browser-video-thumbnail-generator": "^1.1.7",
+    "cloudinary": "^1.41.0",
     "cors": "^2.8.5",
     "crypto-js": "^4.1.1",
     "dotenv": "^10.0.0",
@@ -25,6 +27,7 @@
     "ffprobe-static": "^3.1.0",
     "fluent-ffmpeg": "^2.1.2",
     "http-status-codes": "^2.3.0",
+    "ioredis": "^5.3.2",
     "joi": "^17.11.0",
     "jsonwebtoken": "^8.5.1",
     "multer": "^1.4.5-lts.1",
@@ -32,8 +35,10 @@
     "multer-s3-transform": "^2.10.3",
     "mysql": "^2.18.1",
     "nodemon": "^2.0.15",
+    "redis": "^4.6.11",
     "s3": "^4.4.0",
     "sharp": "^0.32.6",
+    "streamifier": "^0.1.1",
     "thumbsupply": "^0.4.0"
   }
 }

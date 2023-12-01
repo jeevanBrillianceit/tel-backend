@@ -19,7 +19,9 @@ module.exports = Object.freeze({
         proc_create_challange: 'proc_create_challange',
         proc_get_dashboard_data: 'proc_get_dashboard_data',
         proc_upload_media: 'proc_upload_media',
-        proc_delete_file: 'proc_delete_file'
+        proc_delete_file: 'proc_delete_file',
+        proc_create_challenge_privacy: 'proc_create_challenge_privacy',
+        proc_getChallenge_Privacy: 'proc_getChallenge_Privacy',
     },
 
     errorEnum: {
@@ -28,7 +30,9 @@ module.exports = Object.freeze({
         proc_create_challange: 'CREATE-CHALLANGE-ERROR',
         proc_get_dashboard_data: 'GET-DASHBOARD-DATA-ERROR',
         proc_upload_media:'UPLOAD_MEDIA_ERROR',
-        proc_delete_file: 'DELETE_MEDIA_ERROR'
+        proc_delete_file: 'DELETE_MEDIA_ERROR',
+        proc_create_challenge_privacy:'CREATE_CHALLENGE_PRIVACY',
+        proc_getChallenge_Privacy: 'GET_CHALLENGE_PRIVACY',
     }
 })
 
