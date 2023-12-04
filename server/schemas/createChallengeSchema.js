@@ -21,25 +21,6 @@ module.exports = Joi.object({
   from_date: Joi.date().optional().allow(null),
   to_date: Joi.date().optional().allow(null),
   time:Joi.string().allow('')
-
-
-//   ,
-//   type: Joi.string().required().valid("Invite", "Join").messages({
-//     "string.base": `Event type should be string`,
-//     "string.empty": `Event type cannot be an empty field`,
-//     "any.required": `Event type is a required field`,
-//   }),
-//   status: Joi.string().required().valid("RequestSent", "Declined", "Accepted").messages({
-//     "string.base": `Status should be string`,
-//     "string.empty": `Status cannot be an empty field`,
-//     "any.required": `Status is a required field`,
-//   }),
-//   userIds: Joi.array().required().messages({
-//     "string.base": `userIds should be array of Ids (numeric)`,
-//     "string.empty": `userIds cannot be an empty field`,
-//     "any.required": `userIds is a required field`,
-//   }),
-//   command: Joi.string().required()
 });
 
 

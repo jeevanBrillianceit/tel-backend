@@ -9,10 +9,6 @@ const {
 } = require("../database/databaseEnums");
 const schema = require("../schemas/createChallengeSchema");
 
-const Redis = require("ioredis");
-
-const redis = new Redis();
-
 const createChallangeDB = () => {
   return {
     createChallangeDB: async (req, res, next) => {
@@ -157,7 +153,6 @@ const createChallangeDB = () => {
                   response = {
                     message: data[0].message,
                   };
-                  redis.del("videos"); 
                   successFn(response);
                 }
               }

@@ -11,12 +11,6 @@ module.exports = Object.freeze({
     S3_IAM_USER_KEY:'AKIAQ2PNGS2LK5VNOOGC',
     S3_IAM_USER_SECRET:'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',
 
-    // S3_BUCKET_NAME:'bit-aws-s3',
-    // S3_IAM_USER_KEY:'AKIAU63JYZTQGARRM2MV',
-    // S3_IAM_USER_SECRET: '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',
-    // REGION:'ap-south-1',
-  
-
     awsBucketLocationProfile: 'https://dutchuppblob.s3.amazonaws.com/',
     blobRouter: '/router/blob/uploadfile',
 });

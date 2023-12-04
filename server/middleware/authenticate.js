@@ -19,22 +19,16 @@ const authenticate = (req, res, next) => {
         next()
         
     } catch (error) {
-    //      response = {
-    //         message: constants.inValidToken 
-    //     }
-    //    errFn(response, statusCode.StatusCodes.UNAUTHORIZED)
     if (error.name == "TokenExpiredError") {
        const response = {
                     message: constants.inValidToken 
                 }
-                console.log("gd")
         errFn(response, statusCode.StatusCodes.UNAUTHORIZED)
     } else {
         const response = {
             message: constants.authenticationFailed
         }
         errFn(response, statusCode.StatusCodes.NON_AUTHORITATIVE_INFORMATION)
-        console.log("gda")
 
     }
 
