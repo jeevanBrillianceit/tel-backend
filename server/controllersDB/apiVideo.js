@@ -5,13 +5,14 @@ const jsonResponse = require("../../server/utility/jsonResponse");
 const statusCode = require("http-status-codes");
 const sharp = require("sharp");
 const aws = require("aws-sdk");
-const s3 = new aws.S3();
 
 aws.config.update({
   secretAccessKey: constants.S3_IAM_USER_SECRET,
   accessKeyId: constants.S3_IAM_USER_KEY,
+  Bucket: constants.S3_BUCKET_NAME,
   correctClockSkew: true,
 });
+const s3 = new aws.S3();
 
 const uploadVideo = async (req, res, next) => {
   const processedFiles = [];

@@ -14,16 +14,27 @@ const signUpDB = () => {
             }
 
             if (genericFunc.checkEmptyNull('firstName', req.body.firstName, errFn) == true ||
+               genericFunc.checkEmptyNull('lastName', req.body.firstName, errFn) == true ||
                 genericFunc.checkEmptyNull('emailId', req.body.emailId, errFn) == true ||
-                genericFunc.checkEmptyNull('password', req.body.password, errFn) == true
+                genericFunc.checkEmptyNull('password', req.body.password, errFn) == true ||
+                genericFunc.checkEmptyNull('gender', req.body.gender, errFn) == true ||
+                genericFunc.checkEmptyNull('contact', req.body.contact, errFn) == true ||
+                genericFunc.checkEmptyNull('DOB', req.body.dob, errFn) == true 
+
                 // genericFunc.checkEmptyNull('authProvider', req.body.authProvider, errFn) == true
                 ) return
 
 
             const inputObject = [
                 genericFunc.inputparams('firstName', dataTypeEnum.varChar, req.body.firstName),
+                genericFunc.inputparams('lastName', dataTypeEnum.varChar, req.body.lastName),
                 genericFunc.inputparams('emailId', dataTypeEnum.varChar, req.body.emailId),
                 genericFunc.inputparams('passsword', dataTypeEnum.varChar, genericFunc.encrypt(req.body.password)),
+                genericFunc.inputparams('gender', dataTypeEnum.varChar, req.body.gender),
+                genericFunc.inputparams('contact', dataTypeEnum.varChar, req.body.contact),
+                genericFunc.inputparams('DOB', dataTypeEnum.varChar, req.body.dob),
+
+
                 // genericFunc.inputparams('authProvider', dataTypeEnum.varChar, req.body.authProvider)
             ]
 
