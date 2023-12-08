@@ -11,6 +11,10 @@ const checkFileSizeBasedOnType = require("../server/middleware/filesize")
 const privacyDB = require("../server/controllersDB/createPrivacyDB")
 const getPrivacyDB = require("../server/controllersDB/getPrivacyDB");
 const uploadVideo = require("../server/controllersDB/apiVideo")
+const challengeLiked = require("../server/controllersDB/challengeLikedDB")
+const challengeCommented = require("../server/controllersDB/challengeCommentedDB")
+const getCommensChallenge = require("../server/controllersDB/getCommentsDataDB")
+const getUserDetail = require("../server/controllersDB/getUserDetailDataDB")
 
 router.get('/', function (req, res, next) {
     res.send('SERVER STARTED');
@@ -24,7 +28,9 @@ router.post('/privacy',authenticate , privacyDB.privacyDB)
 router.get('/privacy',authenticate, getPrivacyDB.getPrivacyDB)
 router.delete('/delete/:id',authenticate, deleteFile.deleteFileDB)
 router.post('/upload' , upload.array('files',7) , checkFileSizeBasedOnType, uploadVideo.uploadVideo)
-
-
+router.post('/likechallenge' , authenticate,challengeLiked.challengeLikedDB)
+router.post('/commentChallenge' , authenticate,challengeCommented.challengeCommentedDB)
+router.post('/getcommentChallenge' , authenticate,getCommensChallenge.getCommentsDataDB)
+router.post('/getUserDetailById' , authenticate,getUserDetail.getUserDetailDataDB)
 
 module.exports = router;

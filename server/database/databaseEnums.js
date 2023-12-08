@@ -22,6 +22,12 @@ module.exports = Object.freeze({
         proc_delete_file: 'proc_delete_file',
         proc_create_challenge_privacy: 'proc_create_challenge_privacy',
         proc_getChallenge_Privacy: 'proc_getChallenge_Privacy',
+        proc_like_challange:'proc_like_challange',
+        proc_comment_challange:'proc_comment_challange',
+        proc_getcomments_challange:'proc_getcomments_challange',
+        proc_getuser_detail:'proc_getuser_detail'
+
+
     },
 
     errorEnum: {
@@ -33,6 +39,11 @@ module.exports = Object.freeze({
         proc_delete_file: 'DELETE_MEDIA_ERROR',
         proc_create_challenge_privacy:'CREATE_CHALLENGE_PRIVACY',
         proc_getChallenge_Privacy: 'GET_CHALLENGE_PRIVACY',
+        proc_like_challange:"LIKE_CHALLENGE_ERROR",
+        proc_comment_challange:'COMMENT_CHALLENGE_ERROR',
+        proc_getcomments_challange:'GETCOMMENTS_CHALLENGE_ERROR',
+        proc_getuser_detail:'GETUSER_DETAIL_ERROR'
+
     }
 })
 
