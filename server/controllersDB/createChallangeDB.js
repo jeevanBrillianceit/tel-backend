@@ -78,6 +78,7 @@ const createChallangeDB = () => {
             req.body.to_date
           ),
           genericFunc.inputparams("time", dataTypeEnum.time, req.body.time),
+          genericFunc.inputparams("purpose", dataTypeEnum.varChar, req.body.purpose)
         ];
         sqlConnect.connectDb(
           req,

@@ -20,7 +20,12 @@ module.exports = Joi.object({
   longitude:Joi.string().allow(''),
   from_date: Joi.date().optional().allow(null),
   to_date: Joi.date().optional().allow(null),
-  time:Joi.string().allow('')
+  time:Joi.string().allow(''),
+  purpose:Joi.string().required().messages({
+    "string.base": `purpose should be string`,
+    "string.empty": `purpose cannot be an empty field`,
+    "any.required": `purpose is a required field`,
+  })
 });
 
 
