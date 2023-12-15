@@ -16,6 +16,7 @@ const challengeCommented = require("../server/controllersDB/challengeCommentedDB
 const getCommensChallenge = require("../server/controllersDB/getCommentsDataDB")
 const getUserDetail = require("../server/controllersDB/getUserDetailDataDB")
 const getPurposeChallenge = require("../server/controllersDB/purposeChallengeDB")
+const updateProfileDB = require("../server/controllersDB/editProfileDB")
 
 router.get('/', function (req, res, next) {
     res.send('SERVER STARTED');
@@ -28,11 +29,13 @@ router.post('/getDashboardData', authenticate, dashboard.getDashboardDataDB)
 router.post('/privacy',authenticate , privacyDB.privacyDB)
 router.get('/privacy',authenticate, getPrivacyDB.getPrivacyDB)
 router.delete('/delete/:id',authenticate, deleteFile.deleteFileDB)
-router.post('/upload' , upload.array('files',7) , checkFileSizeBasedOnType, uploadVideo.uploadVideo)
+router.post('/upload' , upload.array('files',7) , uploadVideo.uploadVideo)
 router.post('/likechallenge' , authenticate,challengeLiked.challengeLikedDB)
 router.post('/commentChallenge' , authenticate,challengeCommented.challengeCommentedDB)
 router.post('/getcommentChallenge' , authenticate,getCommensChallenge.getCommentsDataDB)
 router.post('/getUserDetailById' , authenticate,getUserDetail.getUserDetailDataDB)
-router.post('/getPurposeChallenge' , authenticate,getPurposeChallenge.PurposeChallengeDataDB)
+router.post('/getPurposeChallenge' , authenticate,getPurposeChallenge.PurposeChallengeDataDB),
+router.patch('/updateProfile', authenticate,updateProfileDB.editProfileDB)
+
 
 module.exports = router;
