@@ -42,6 +42,38 @@
             encrypt: function (pwd) {
                 return (crypto.createHash('sha256').update(pwd).digest('base64'));
             },
+
+
+            findDuplicates : async (data) => {
+                const output = {};
+                data.forEach((obj) => {
+                  const key = obj.challenge_id;
+                  if (!output[key]) {
+                    output[key] = [];
+                  }
+                  const convertedObj =
+                    obj.constructor.name === "RowDataPacket" ? { ...obj } : obj;
+                  output[key].push(convertedObj);
+                });
+              
+                const resultArrays = Object.values(output).map((arr, id) => ({
+                  id,
+                  inner: arr,
+                }));
+              
+                return resultArrays.reverse();
+              },
+
+               includeCommentCount : (nestedArray, array2) =>{
+                return nestedArray.map(outerObj => ({
+                  ...outerObj,
+                  inner: outerObj.inner.map(innerObj => {
+                    const matchingObject = array2.find(obj =>  obj.id === outerObj.id && obj.inner.some(i => i.challenge_id === innerObj.challenge_id));
+                    return matchingObject ? { ...innerObj, comment_count: matchingObject.inner.find(i => i.challenge_id === innerObj.challenge_id).comments_count } : innerObj;
+                  }),
+                }));
+              }
+
         }
     };
     module.exports = generics();

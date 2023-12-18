@@ -40,12 +40,12 @@ const getUserDetailDataDB = () => {
               let data1 = result[1];
               let data2 = result[2];
 
-              if (data[0]?.message === "User Detail Success" && data1[0]?.message === "User Challenges Success" &&  data2[0]?.message === "Comment Success") {
-                const newarray = await findDuplicates(result[1]);
+              if ((data[0]?.message === "User Detail Success") || (data1[0]?.message === "User Challenges Success" &&  data2[0]?.message === "Comment Success")) {
+                const newarray = await genericFunc.findDuplicates(result[1]);
              
-                const newarray2 = await findDuplicates(result[2]);
+                const newarray2 = await genericFunc.findDuplicates(result[2]);
                 // Call the function
-                const updatedNestedArray = includeCommentCount(newarray, newarray2);
+                const updatedNestedArray = genericFunc.includeCommentCount(newarray, newarray2);
                  const newResponses = {
                    ...data[0],
                   media : updatedNestedArray
@@ -70,37 +70,6 @@ const getUserDetailDataDB = () => {
   };
 };
 
-const findDuplicates = async (data) => {
-  const output = {};
-  data.forEach((obj) => {
-    const key = obj.challenge_id;
-    if (!output[key]) {
-      output[key] = [];
-    }
-    const convertedObj =
-      obj.constructor.name === "RowDataPacket" ? { ...obj } : obj;
-    output[key].push(convertedObj);
-  });
-
-  const resultArrays = Object.values(output).map((arr, id) => ({
-    id,
-    inner: arr,
-  }));
-
-  return resultArrays.reverse();
-};
-
-
-// Function to include comment_count from array2 into nestedArray
-function includeCommentCount(nestedArray, array2) {
-  return nestedArray.map(outerObj => ({
-    ...outerObj,
-    inner: outerObj.inner.map(innerObj => {
-      const matchingObject = array2.find(obj =>  obj.id === outerObj.id && obj.inner.some(i => i.challenge_id === innerObj.challenge_id));
-      return matchingObject ? { ...innerObj, comment_count: matchingObject.inner.find(i => i.challenge_id === innerObj.challenge_id).comments_count } : innerObj;
-    }),
-  }));
-}
 
 
 module.exports = getUserDetailDataDB();

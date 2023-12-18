@@ -27,7 +27,8 @@ module.exports = Object.freeze({
         proc_getcomments_challange:'proc_getcomments_challange',
         proc_getuser_detail:'proc_getuser_detail',
         proc_purpose_challange:'proc_purpose_challange',
-        proc_editProfile:"proc_editProfile"
+        proc_editProfile:"proc_editProfile",
+        proc_getChallenges_By_Id:"proc_getChallenges_By_Id"
 
     },
 
@@ -45,8 +46,8 @@ module.exports = Object.freeze({
         proc_getcomments_challange:'GETCOMMENTS_CHALLENGE_ERROR',
         proc_getuser_detail:'GETUSER_DETAIL_ERROR',
         proc_purpose_challange:'PURPOSE_CHALLENGE_ERROR',
-        proc_editProfile:"EDITPROFILE_ERROR"
-
+        proc_editProfile:"EDITPROFILE_ERROR",
+        proc_getChallenges_By_Id:"GET_CHALLENGE_BY_ID_ERROR"
     }
 })
 

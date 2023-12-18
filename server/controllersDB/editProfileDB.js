@@ -13,20 +13,15 @@ const editProfileDB = () => {
             const errFn = (err,statusCode) => {
                 jsonResponse.errorHandler(res, next, err,statusCode)
             }
-
-            if (genericFunc.checkEmptyNull('firstName', req.body.firstName, errFn) == true ||
-                genericFunc.checkEmptyNull('emailId', req.body.emailId, errFn) == true) return
-
-
             const inputObject = [
                 genericFunc.inputparams('userId', dataTypeEnum.varChar, req.user.id),
-                genericFunc.inputparams('firstName', dataTypeEnum.varChar, req.body.firstName),
-                genericFunc.inputparams('lastName', dataTypeEnum.varChar, req.body.lastName),
-                genericFunc.inputparams('userName', dataTypeEnum.varChar, req.body.userName),
-                genericFunc.inputparams('emailId', dataTypeEnum.varChar, req.body.emailId),
-                genericFunc.inputparams('profileImage', dataTypeEnum.varChar, req.body.profileImage),
-                genericFunc.inputparams('contact', dataTypeEnum.varChar, req.body.contact),
-                genericFunc.inputparams('DOB', dataTypeEnum.varChar, req.body.DOB)
+                genericFunc.inputparams('firstName', dataTypeEnum.varChar, req.body?.firstName),
+                genericFunc.inputparams('lastName', dataTypeEnum.varChar, req.body?.lastName),
+                genericFunc.inputparams('userName', dataTypeEnum.varChar, req.body?.userName),
+                genericFunc.inputparams('emailId', dataTypeEnum.varChar, req.body?.emailId),
+                genericFunc.inputparams('profileImage', dataTypeEnum.varChar, req.body?.profileImage),
+                genericFunc.inputparams('contact', dataTypeEnum.varChar, req.body?.contact),
+                genericFunc.inputparams('DOB', dataTypeEnum.varChar, req.body?.DOB)
             ]
 
             sqlConnect.connectDb(req, errFn, procedureEnum.proc_editProfile, inputObject, errorEnum.proc_editProfile, function (result) {
