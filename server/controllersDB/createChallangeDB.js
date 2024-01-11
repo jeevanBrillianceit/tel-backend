@@ -1,4 +1,4 @@
-const statusCode = require('http-status-codes')
+const statusCode = require("http-status-codes");
 const sqlConnect = require("../database/connection");
 const genericFunc = require("../utility/genericFunctions");
 const jsonResponse = require("../utility/jsonResponse");
@@ -23,15 +23,14 @@ const createChallangeDB = () => {
       const { error } = schema.validate(reqBody);
       if (error) {
         var message =
-        error?.details?.length &&
-          error.details[0].message
+          error?.details?.length && error.details[0].message
             ? error.details[0].message
             : "Missing Fields";
         const response = {
           message: message,
           // 'token': genericFunc.generateTokenLink(data),
         };
-        errFn(response,statusCode.StatusCodes.NOT_ACCEPTABLE);
+        errFn(response, statusCode.StatusCodes.NOT_ACCEPTABLE);
         return;
       } else {
         // if (genericFunc.checkEmptyNull('userId', req.user.id, errFn) == true ||
@@ -68,18 +67,42 @@ const createChallangeDB = () => {
             req.body.longitude
           ),
           genericFunc.inputparams(
-            "from_date",
+            "startDate",
             dataTypeEnum.date,
-            req.body.from_date
+            req.body.startDate
           ),
           genericFunc.inputparams(
-            "to_date",
+            "endDate",
             dataTypeEnum.date,
-            req.body.to_date
+            req.body.endDate
           ),
-          genericFunc.inputparams("time", dataTypeEnum.time, req.body.time),
-          genericFunc.inputparams("purpose", dataTypeEnum.varChar, req.body.purpose)
+          genericFunc.inputparams(
+            "startTime",
+            dataTypeEnum.time,
+            req.body.startTime
+          ),
+          genericFunc.inputparams(
+            "category",
+            dataTypeEnum.varChar,
+            req.body.category
+          ),
+          genericFunc.inputparams(
+            "endTime",
+            dataTypeEnum.time,
+            req.body.endTime
+          ),
+          genericFunc.inputparams(
+            "location",
+            dataTypeEnum.varChar,
+            req.body.location
+          ),
+          genericFunc.inputparams(
+            "privacy",
+            dataTypeEnum.varChar,
+            req.body.privacy
+          ),
         ];
+        console.log(inputObject)
         sqlConnect.connectDb(
           req,
           errFn,
@@ -142,7 +165,10 @@ const createChallangeDB = () => {
                                 response = {
                                   message: data[0].message,
                                 };
-                                errFn(response,statusCode.StatusCodes.UNSUPPORTED_MEDIA_TYPE);
+                                errFn(
+                                  response,
+                                  statusCode.StatusCodes.UNSUPPORTED_MEDIA_TYPE
+                                );
                               }
                             }
                           }
@@ -153,6 +179,7 @@ const createChallangeDB = () => {
 
                   response = {
                     message: data[0].message,
+                    "data" :  data[data.length - 1]
                   };
                   successFn(response);
                 }

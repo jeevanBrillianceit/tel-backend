@@ -14,16 +14,16 @@ const loginDB = () => {
                 jsonResponse.errorHandler(res, next, err,statusCode)
             }
 
-            if (genericFunc.checkEmptyNull('firstName', req.body.firstName, errFn) == true ||
+            if (
                 genericFunc.checkEmptyNull('emailId', req.body.emailId, errFn) == true ||
-                genericFunc.checkEmptyNull('password', req.body.password, errFn) == true) return
+                genericFunc.checkEmptyNull('password', req.body.password, errFn) == true ||
+                genericFunc.checkEmptyNull('authProvider', req.body.authProvider, errFn) == true) return
 
 
             const inputObject = [
-                genericFunc.inputparams('firstName', dataTypeEnum.varChar, req.body.firstName),
                 genericFunc.inputparams('emailId', dataTypeEnum.varChar, req.body.emailId),
                 genericFunc.inputparams('password', dataTypeEnum.varChar, genericFunc.encrypt(req.body.password)),
-                genericFunc.inputparams('profileImage', dataTypeEnum.varChar, req.body.profileImage)
+                genericFunc.inputparams('authProvider', dataTypeEnum.varChar, req.body.authProvider)
             ]
 
             sqlConnect.connectDb(req, errFn, procedureEnum.proc_login, inputObject, errorEnum.proc_login, function (result) {

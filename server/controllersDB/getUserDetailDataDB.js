@@ -19,7 +19,7 @@ const getUserDetailDataDB = () => {
         jsonResponse.errorHandler(res, next, err, statusCode);
       };
 
-      if (genericFunc.checkEmptyNull("userId", req.user.id, errFn) == true)
+      if (genericFunc.checkEmptyNull("userId", req.body.userId, errFn) == true)
         return;
 
       const inputObject = [
