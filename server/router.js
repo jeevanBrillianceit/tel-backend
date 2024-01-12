@@ -18,6 +18,7 @@ const getUserDetail = require("../server/controllersDB/getUserDetailDataDB")
 const getPurposeChallenge = require("../server/controllersDB/purposeChallengeDB")
 const updateProfileDB = require("../server/controllersDB/editProfileDB")
 const getChallengeById = require("../server/controllersDB/getChallengesByChallengeId")
+const getChallengeByUserId = require("../server/controllersDB/getChallengeByUserIdDB")
 
 router.get('/', function (req, res, next) {
     res.send('SERVER STARTED');
@@ -38,5 +39,6 @@ router.post('/getUserDetailById' , authenticate,getUserDetail.getUserDetailDataD
 router.post('/getPurposeChallenge' , authenticate,getPurposeChallenge.PurposeChallengeDataDB),
 router.patch('/updateProfile', authenticate,updateProfileDB.editProfileDB)
 router.post('/getChallengeById', authenticate,getChallengeById.getChallengeByChallengeId)
+router.post('/getChallengeByUserId',authenticate,getChallengeByUserId.getChallengeByUserIdDB)
 
 module.exports = router;

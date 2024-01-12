@@ -6,7 +6,6 @@ const statusCode  = require('http-status-codes');
 const authenticate = (req, res, next) => {
 
     const errFn = (err, statusCode) => {
-        console.log(err)
         jsonResponse.errorHandler(res, next, err,statusCode);
       };
 
