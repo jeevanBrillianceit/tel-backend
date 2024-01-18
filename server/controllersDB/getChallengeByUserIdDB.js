@@ -28,7 +28,7 @@ const getChallengeByUserIdDB = () =>{
                     if(result.length > 0){
                         if(result[0]){
                             let data = result[0]
-                            if(data[0].message="Challenge Success"){
+                            if(data[0] && (data[0].message = "Challenge Success")){
                                 const resultdata = await groupChallenges(result[0])
                                 let response={
                                     "message":"Challenge Succeed",
@@ -39,6 +39,8 @@ const getChallengeByUserIdDB = () =>{
                                 errFn(result,StatusCodes.StatusCodes.INTERNAL_SERVER_ERROR)
                             }
                         }
+                    }else{
+                        errFn(result,StatusCodes.StatusCodes.INTERNAL_SERVER_ERROR)
                     }
                 })
 
@@ -54,7 +56,7 @@ async function groupChallenges(arr) {
     const groupedChallenges = {}; 
     for (const obj of arr) {
       const category = obj.category;
-      const startDate = obj.startDate.toString().slice(0, 10);
+      const startDate = obj.startDate?.toString().slice(0, 10);
       const targetKey = startDate === today ? "upcomingChallenge" : "pastChallenge";
       groupedChallenges[category] ??= { upcomingChallenge: [], pastChallenge: [] }; 
       groupedChallenges[category][targetKey].push(obj);

@@ -19,6 +19,8 @@ const getPurposeChallenge = require("../server/controllersDB/purposeChallengeDB"
 const updateProfileDB = require("../server/controllersDB/editProfileDB")
 const getChallengeById = require("../server/controllersDB/getChallengesByChallengeId")
 const getChallengeByUserId = require("../server/controllersDB/getChallengeByUserIdDB")
+const GoogleSignUpDB = require("./controllersDB/googleSignUp")
+const GoogleSignInDB = require("./controllersDB/googleSignInDB")
 
 router.get('/', function (req, res, next) {
     res.send('SERVER STARTED');
@@ -40,5 +42,8 @@ router.post('/getPurposeChallenge' , authenticate,getPurposeChallenge.PurposeCha
 router.patch('/updateProfile', authenticate,updateProfileDB.editProfileDB)
 router.post('/getChallengeById', authenticate,getChallengeById.getChallengeByChallengeId)
 router.post('/getChallengeByUserId',authenticate,getChallengeByUserId.getChallengeByUserIdDB)
+router.post('/googleSignUp',GoogleSignUpDB.GoogleSignUpDB)
+router.post('/googleSignIn',GoogleSignInDB.GoogleSignInDB)
+
 
 module.exports = router;

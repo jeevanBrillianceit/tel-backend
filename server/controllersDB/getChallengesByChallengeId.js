@@ -38,14 +38,25 @@ const getChallengeByChallengeId = () => {
             if (result[0] && result[1]) {
               let data = result[0];
               let data1 = result[1];
+              let data2 = result[2];
+              let data3 = result[3];
+              let data4 = result[4];
 
-              if ((data[0]?.message === "Media Success") ||  (data1[0]?.message === "Comment Success")) {
+
+              if ((data[0]?.message === "Media Success") ||  (data1[0]?.message === "Comment Success" || (data2[0]?.message === "Success") ||  (data3[0]?.message === "User Detail Success") ||(data4[0]?.message === "Challenge Detail Success"))) {
                 const newarray = await genericFunc.findDuplicates(result[0]);
                 const newarray2 = await genericFunc.findDuplicates(result[1]);
+                const comments = result[2];
+                const userDetail = result[3];
+                const challlengeDetail = result[4];
+
               // Call the function
               const updatedNestedArray = genericFunc.includeCommentCount(newarray, newarray2);
- 
               // Output the updated nestedArray
+              // Modify the first object in the first array directly
+              updatedNestedArray[0].comments = comments;
+              updatedNestedArray[0].userDetail = userDetail[0];
+              updatedNestedArray[0].challlengeDetail = challlengeDetail[0]
                 const response = {
                    message: data.message,
                    data: updatedNestedArray,

@@ -28,8 +28,11 @@ module.exports = Object.freeze({
         proc_getuser_detail:'proc_getuser_detail',
         proc_purpose_challange:'proc_purpose_challange',
         proc_editProfile:"proc_editProfile",
-        proc_getChallenges_By_Id:"proc_getChallenges_By_Id",
-        proc_getChallenges_By_UserId:"proc_getChallenges_By_UserId"
+        proc_getChallenges_By_Id:"proc_getChallengeDetail_ByChallengeId",
+        proc_getChallenges_By_UserId:"proc_getChallenges_By_UserId",
+        proc_signUp_with_google:"proc_signUp_with_google",
+        proc_signIn_with_google:"proc_signIn_with_google"
+
     },
 
     errorEnum: {
@@ -48,7 +51,9 @@ module.exports = Object.freeze({
         proc_purpose_challange:'PURPOSE_CHALLENGE_ERROR',
         proc_editProfile:"EDITPROFILE_ERROR",
         proc_getChallenges_By_Id:"GET_CHALLENGE_BY_ID_ERROR",
-        proc_getChallenges_By_UserId:"GET_CHALLENGE_BY_USERID_ERROR"
+        proc_getChallenges_By_UserId:"GET_CHALLENGE_BY_USERID_ERROR",
+        proc_signUp_with_google:"SIGNUP_WITH_GOOGLE_ERROR",
+        proc_signIn_with_google:"SIGNIN_WITH_GOOGLE_ERROR"
 
     }
 })
