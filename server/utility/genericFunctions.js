@@ -24,6 +24,17 @@
                 return false
             },
 
+            checkPasswordRequired: function (object, data, authProvider,errfun) {
+              if (authProvider === 'traditional' && (data === undefined || data === "")) {
+                  var message;
+                  message = this.errorFunc(object + " is missing");
+                  errfun(message);
+                  return true
+              }
+              return false
+          },
+
+
             generateTokenLink: function (data) {
                 var token = jwt.sign({ data }, process.env.ACCESS_TOKEN_SECRET, {
                     expiresIn: process.env.ACCESS_TOKEN_EXPIRE_TIME

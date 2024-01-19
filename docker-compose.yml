@@ -1,0 +1,30 @@
+
+services:
+  mysqldb:
+    image: mysql:8.0.34
+    restart: unless-stopped
+    env_file: ./.env
+    environment:
+      - MYSQL_ROOT_PASSWORD=Amandeep13#
+      - MYSQL_DATABASE=talentrii
+    volumes:
+      - db:/var/lib/mysql
+  app:
+    build: .
+    depends_on:
+      - mysqldb
+    restart: unless-stopped
+    env_file: ./.env
+    ports:
+      - "3001:3000" 
+    environment:
+      - DB_HOST=mysqldb
+      - DB_USER=$MYSQLDB_USER
+      - DB_PASSWORD=$MYSQLDB_ROOT_PASSWORD
+      - DB_NAME=$MYSQLDB_DATABASE
+      - DB_PORT=3306 
+    stdin_open: true
+    tty: true
+
+volumes: 
+  db:

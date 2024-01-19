@@ -16,13 +16,12 @@ const loginDB = () => {
 
             if (
                 genericFunc.checkEmptyNull('emailId', req.body.emailId, errFn) == true ||
-                genericFunc.checkEmptyNull('password', req.body.password, errFn) == true ||
+                genericFunc.checkPasswordRequired('password',req.body.password, req.body.authProvider,errFn) == true ||
                 genericFunc.checkEmptyNull('authProvider', req.body.authProvider, errFn) == true) return
-
 
             const inputObject = [
                 genericFunc.inputparams('emailId', dataTypeEnum.varChar, req.body.emailId),
-                genericFunc.inputparams('password', dataTypeEnum.varChar, genericFunc.encrypt(req.body.password)),
+                genericFunc.inputparams('password', dataTypeEnum.varChar, req.body.password ? genericFunc.encrypt(req.body.password):''),
                 genericFunc.inputparams('authProvider', dataTypeEnum.varChar, req.body.authProvider)
             ]
 
