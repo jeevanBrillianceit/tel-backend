@@ -17,7 +17,7 @@ const signUpDB = () => {
                 genericFunc.checkEmptyNull('firstName', req.body.firstName, errFn) == true ||
                 genericFunc.checkEmptyNull('emailId', req.body.emailId, errFn) == true ||
                 genericFunc.checkPasswordRequired('password',req.body.password, req.body.authProvider,errFn) == true ||
-                genericFunc.checkEmptyNull('authProvider', req.body.authProvider, errFn) == true
+                genericFunc.checkEmptyNull('authProvider', req.body.authProvider, errFn) ==  true
                 ) return
 
 
