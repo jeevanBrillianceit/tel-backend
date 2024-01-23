@@ -1,1 +1,2 @@
-require('./config.js');
+// test
+require("./config.js");
