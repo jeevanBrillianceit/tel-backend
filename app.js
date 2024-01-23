@@ -1,2 +1,1 @@
-//test
 require("./config.js");
