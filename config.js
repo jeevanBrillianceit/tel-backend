@@ -40,7 +40,7 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 app.get("/", function (req, res, next) {
-  res.send("SERVER STARTED 12");
+  res.send("SERVER STARTED 1234");
 });
 app.use("/router", router);
 app.use(express.json());
