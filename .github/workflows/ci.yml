@@ -41,11 +41,10 @@ jobs:
         run: npm install
 
       - name: Execute SSH Command
-        run: npm run ssh-command
-        env:
-          EC2_HOST: ${{ secrets.EC2_HOST }}
-          EC2_USERNAME: ${{ secrets.EC2_USERNAME }}
-          EC2_PRIVATE_KEY: ${{ secrets.EC2_PRIVATE_KEY }}
+        run: |
+          echo "${{ secrets.EC2_PRIVATE_KEY }}" | base64 --decode > /tmp/private-key.pem
+          chmod 600 /tmp/private-key.pem
+          ssh -o StrictHostKeyChecking=no -i /tmp/private-key.pem ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} 'echo Hello from GitHub Actions!'
 
   cd-pipeline:
     runs-on: ubuntu-latest
@@ -77,8 +76,7 @@ jobs:
         run: docker ps -a
 
       - name: Execute Additional Commands on EC2 (Replace with your actual commands)
-        run: npm run ssh-command
-        env:
-          EC2_HOST: ${{ secrets.EC2_HOST }}
-          EC2_USERNAME: ${{ secrets.EC2_USERNAME }}
-          EC2_PRIVATE_KEY: ${{ secrets.EC2_PRIVATE_KEY }}
+        run: |
+          echo "${{ secrets.EC2_PRIVATE_KEY }}" | base64 --decode > /tmp/private-key.pem
+          chmod 600 /tmp/private-key.pem
+          ssh -o StrictHostKeyChecking=no -i /tmp/private-key.pem ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} 'echo Additional commands on EC2'
