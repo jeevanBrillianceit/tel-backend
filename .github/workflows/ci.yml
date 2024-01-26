@@ -72,3 +72,6 @@ jobs:
 
       - name: Check Container Logs
         run: sudo docker logs cicd-pipeline-container
+
+      - name: Check Docker Container Status
+        run: sudo docker ps -a
