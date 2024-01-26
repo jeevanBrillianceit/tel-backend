@@ -5,6 +5,7 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
+    "ssh-command": "ssh -i <(echo $EC2_PRIVATE_KEY | base64 -d) $EC2_USERNAME@$EC2_HOST 'echo Hello from GitHub Actions!'",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
