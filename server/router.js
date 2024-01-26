@@ -21,7 +21,7 @@ const getChallengeById = require("../server/controllersDB/getChallengesByChallen
 const getChallengeByUserId = require("../server/controllersDB/getChallengeByUserIdDB");
 
 router.get("/", function (req, res, next) {
-  res.send("SERVER STARTED ROUTER HERE");
+  res.send("SERVER STARTED ROUTER HERE HERE");
 });
 
 router.post("/login", login.loginDB);
