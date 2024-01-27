@@ -2,81 +2,43 @@ name: CI/CD Pipeline
 
 on:
   push:
-    branches: ["main"]
+    branches:
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-      - name: Login Dockerhub
-        env:
-          DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
-          DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
-        run: echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: "16.20.1"
 
-      - name: Build the Docker image
-        run: docker build -t jeevanbit/cicd-pipeline .
-
-      - name: Push to Dockerhub
-        run: docker push jeevanbit/cicd-pipeline:latest
+    - name: Build Docker image
+      run: |
+        docker build -t jeevanbit/cicd-pipeline .
+        docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+        docker push jeevanbit/cicd-pipeline
 
   deploy:
     runs-on: ubuntu-latest
+
     needs: build
 
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
+    - name: Copy SSH key
+      run: echo "${{ secrets.EC2_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+      shell: bash
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: "16.20.1"
+    - name: Set up known hosts
+      run: ssh-keyscan -t rsa ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
-      - name: Install Dependencies
-        run: npm install
-
-      - name: Execute SSH Command
-        run: |
-          echo "${{ secrets.EC2_PRIVATE_KEY }}" | base64 --decode > /tmp/private-key.pem
-          chmod 600 /tmp/private-key.pem
-          ssh -o StrictHostKeyChecking=no -i /tmp/private-key.pem ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} 'echo Hello from GitHub Actions!'
-
-  cd-pipeline:
-    runs-on: ubuntu-latest
-    needs: deploy
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
-
-      - name: Delete Unnecessary space
-        run: sudo docker system prune -af
-
-      - name: Delete Old Docker container
-        run: sudo docker rm -f cicd-pipeline-container || true
-
-      - name: Pull Docker image
-        run: docker pull jeevanbit/cicd-pipeline:latest
-
-      - name: Run Docker Container
-        run: docker run -d -p 3000:3000 --name cicd-pipeline-container jeevanbit/cicd-pipeline:latest
-
-      - name: Wait for Container to Start
-        run: sleep 10s
-
-      - name: Check Container Logs
-        run: docker logs cicd-pipeline-container
-
-      - name: Check Docker Container Status
-        run: docker ps -a
-
-      - name: Execute Additional Commands on EC2 (Replace with your actual commands)
-        run: |
-          echo "${{ secrets.EC2_PRIVATE_KEY }}" | base64 --decode > /tmp/private-key.pem
-          chmod 600 /tmp/private-key.pem
-          ssh -o StrictHostKeyChecking=no -i /tmp/private-key.pem ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} 'echo Additional commands on EC2'
+    - name: Deploy to EC2
+      run: |
+        scp -r -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ./docker-compose.yml ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }}:~/docker-compose.yml
+        ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} 'docker-compose -f ~/docker-compose.yml up -d'
+      shell: bash
