@@ -1,70 +1,43 @@
-name: Build on DockerHub and Deploy to AWS
+name: CI
+
 on:
   push:
     branches:
       - main
 
-env:
-  DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
-  DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
-  EC2_PRIVATE_KEY: ${{secrets.EC2_PRIVATE_KEY}}
-  AWS_INSTANCE_IP: "3.93.212.44"  # Replace with your actual EC2 instance IP
-  DOCKERHUB_IMAGE: "jeevanbit/cicd-pipeline:latest"  # Replace with your Docker Hub image name
-
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+    - name: Checkout repository
+      uses: actions/checkout@v2
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 14
 
-      - name: Login to DockerHub
-        uses: docker/login-action@v1
-        with:
-          username: ${{secrets.DOCKER_USERNAME}}
-          password: ${{secrets.DOCKER_PASSWORD}}
+    - name: Install dependencies
+      run: npm install
 
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v2
-        with:
-          context: ./
-          push: true
-          dockerfile: ./Dockerfile
-          tags: ${{ env.DOCKERHUB_IMAGE }}
+    - name: Build Docker image
+      run: docker build -t jeevanbit/cicd-pipeline .
 
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+    - name: Login to Docker Hub
+      run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Set permissions for private key
-        run: |
-          echo "${{ secrets.EC2_PRIVATE_KEY }}" > key.pem
-          chmod 600 key.pem
+    - name: Push Docker image
+      run: docker push jeevanbit/cicd-pipeline
 
-      - name: Display key content
-        run: cat key.pem
+    - name: Save EC2 private key
+      run: echo "${{ secrets.EC2_PRIVATE_KEY }}" | base64 --decode > ~/.ssh/ec2-private-key.pem
+      shell: bash
 
-      - name: Login to Docker Hub
-        uses: docker/login-action@v1
-        with:
-          username: ${{secrets.DOCKER_USERNAME}}
-          password: ${{secrets.DOCKER_PASSWORD}}
+    - name: Set up SSH agent
+      run: |
+        eval "$(ssh-agent -s)"
+        ssh-add ~/.ssh/ec2-private-key.pem
 
-      - name: Pull Docker image
-        run: |
-          ssh -o StrictHostKeyChecking=no -i key.pem ubuntu@${{env.AWS_INSTANCE_IP}} 'sudo docker pull ${{ env.DOCKERHUB_IMAGE }}'
-
-      - name: Stop running container
-        run: |
-          ssh -o StrictHostKeyChecking=no -i key.pem ubuntu@${{env.AWS_INSTANCE_IP}} 'sudo docker stop cddemo || true'
-          ssh -o StrictHostKeyChecking=no -i key.pem ubuntu@${{env.AWS_INSTANCE_IP}} 'sudo docker rm cddemo || true'
-
-      - name: Run new container
-        run: |
-          ssh -o StrictHostKeyChecking=no -i key.pem ubuntu@${{env.AWS_INSTANCE_IP}} 'sudo docker run -d --name cddemo -p 80:3000 ${{env.DOCKERHUB_IMAGE}}'
+    - name: Deploy to EC2
+      run: ssh -o StrictHostKeyChecking=no -l ${{ secrets.EC2_USERNAME }} ${{ secrets.EC2_HOST }} 'bash -s' < deploy.sh
