@@ -5,20 +5,15 @@ export EC2_PRIVATE_KEY="~/.ssh/cicdpipeline.pem"
 export EC2_USERNAME="ubuntu"
 export EC2_HOST="ec2-3-93-212-44.compute-1.amazonaws.com"
 
-# SSH into the EC2 instance and execute deployment steps
-ssh -o StrictHostKeyChecking=no -i $EC2_PRIVATE_KEY $EC2_USERNAME@$EC2_HOST << 'ENDSSH'
-  # Navigate to the Node.js project directory
-  cd /app
+# Set up SSH agent and Docker in Docker
+eval "$(ssh-agent -s)"
+mkdir -p ~/.ssh  # Create ~/.ssh directory if it doesn't exist
+ssh-keyscan -t rsa,ed25519 ec2-3-93-212-44.compute-1.amazonaws.com >> ~/.ssh/known_hosts
+echo "${{ secrets.EC2_PRIVATE_KEY }}" | base64 --decode > ~/.ssh/cicdpipeline.pem && chmod 600 ~/.ssh/cicdpipeline.pem
+ssh-add ~/.ssh/cicdpipeline.pem
+docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+docker buildx create --use
+docker info
+docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
 
-  # Pull latest changes from GitHub
-  git pull origin main
-
-  # Install Node.js dependencies
-  npm install
-
-  # Restart the Node.js application (replace with your actual start command)
-  pm2 restart my-node-app
-
-  # Update Nginx configuration (replace with your actual configuration update)
-  sudo nginx -s reload
-ENDSSH
+# Rest of your script...
