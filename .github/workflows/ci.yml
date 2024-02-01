@@ -27,6 +27,7 @@ jobs:
     - name: Set up SSH agent and Docker in Docker
       run: |
         eval "$(ssh-agent -s)"
+        mkdir -p ~/.ssh
         ssh-keyscan -t rsa,ed25519 ec2-3-93-212-44.compute-1.amazonaws.com >> ~/.ssh/known_hosts
         echo "${{ secrets.EC2_PRIVATE_KEY }}" | base64 --decode > ~/.ssh/cicdpipeline.pem && chmod 600 ~/.ssh/cicdpipeline.pem
         ssh-add ~/.ssh/cicdpipeline.pem
