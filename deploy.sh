@@ -8,7 +8,7 @@ export EC2_HOST="ec2-3-93-212-44.compute-1.amazonaws.com"
 # SSH into the EC2 instance and execute deployment steps
 ssh -o StrictHostKeyChecking=no -i $EC2_PRIVATE_KEY $EC2_USERNAME@$EC2_HOST << 'ENDSSH'
   # Navigate to the Node.js project directory
-  cd /path/to/your/Node.js/project
+  cd /app
 
   # Pull latest changes from GitHub
   git pull origin main
