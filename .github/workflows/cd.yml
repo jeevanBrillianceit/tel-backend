@@ -19,14 +19,8 @@ jobs:
       with:
         node-version: "16.20.1"
 
-    - name: Save EC2 private key
-      run: echo "${{ secrets.EC2_PRIVATE_KEY }}" | base64 --decode > /tmp/cicdpipeline.pem
-      shell: bash
-
-    - name: Set up SSH agent
-      run: |
-        eval "$(ssh-agent -s)"
-        ssh-add /tmp/cicdpipeline.pem
+    - name: Install dependencies
+      run: npm install
 
     - name: Deploy to EC2
-      run: ssh -o StrictHostKeyChecking=no -i /tmp/cicdpipeline.pem ubuntu@ec2-3-93-212-44.compute-1.amazonaws.com 'bash -s' < deploy.sh
+      run: ./deploy.sh
