@@ -24,14 +24,23 @@ jobs:
     - name: Build Docker image
       run: docker build -t jeevanbit/cicd-pipeline .
 
-    - name: Login to Docker Hub
-      run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+    - name: Set up SSH agent and Docker in Docker
+      run: |
+        eval "$(ssh-agent -s)"
+        ssh-add /tmp/cicdpipeline.pem
+        docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+        docker buildx create --use
+        docker info
+        docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+
+    - name: Push Docker image
+      run: docker push jeevanbit/cicd-pipeline
 
     - name: Save EC2 private key
       run: echo "${{ secrets.EC2_PRIVATE_KEY }}" | base64 --decode > /tmp/cicdpipeline.pem && chmod 600 /tmp/cicdpipeline.pem
       shell: bash
 
-    - name: Set up SSH agent
+    - name: Set up SSH agent (again after Docker setup)
       run: |
         eval "$(ssh-agent -s)"
         ssh-add /tmp/cicdpipeline.pem
