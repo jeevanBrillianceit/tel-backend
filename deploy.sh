@@ -1,10 +1,5 @@
 #!/bin/bash
 
-# Set environment variables
-export EC2_PRIVATE_KEY="~/.ssh/cicdpipeline.pem"
-export EC2_USERNAME="ubuntu"
-export EC2_HOST="ec2-3-93-212-44.compute-1.amazonaws.com"
-
 # Set up SSH agent and Docker in Docker
 eval "$(ssh-agent -s)"
 mkdir -p ~/.ssh  # Create ~/.ssh directory if it doesn't exist
