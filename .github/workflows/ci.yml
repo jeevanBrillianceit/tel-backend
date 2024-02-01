@@ -27,7 +27,9 @@ jobs:
     - name: Set up SSH agent and Docker in Docker
       run: |
         eval "$(ssh-agent -s)"
-        ssh-add /tmp/cicdpipeline.pem
+        ssh-keyscan -t rsa,ed25519 ec2-3-93-212-44.compute-1.amazonaws.com >> ~/.ssh/known_hosts
+        echo "${{ secrets.EC2_PRIVATE_KEY }}" | base64 --decode > ~/.ssh/cicdpipeline.pem && chmod 600 ~/.ssh/cicdpipeline.pem
+        ssh-add ~/.ssh/cicdpipeline.pem
         docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
         docker buildx create --use
         docker info
@@ -37,13 +39,13 @@ jobs:
       run: docker push jeevanbit/cicd-pipeline
 
     - name: Save EC2 private key
-      run: echo "${{ secrets.EC2_PRIVATE_KEY }}" | base64 --decode > /tmp/cicdpipeline.pem && chmod 600 /tmp/cicdpipeline.pem
+      run: echo "${{ secrets.EC2_PRIVATE_KEY }}" | base64 --decode > ~/.ssh/cicdpipeline.pem && chmod 600 ~/.ssh/cicdpipeline.pem
       shell: bash
 
     - name: Set up SSH agent (again after Docker setup)
       run: |
         eval "$(ssh-agent -s)"
-        ssh-add /tmp/cicdpipeline.pem
+        ssh-add ~/.ssh/cicdpipeline.pem
 
     - name: Deploy to EC2
-      run: ssh -o StrictHostKeyChecking=no -i /tmp/cicdpipeline.pem ubuntu@ec2-3-93-212-44.compute-1.amazonaws.com 'bash -s' < deploy.sh
+      run: ssh -o StrictHostKeyChecking=no -i ~/.ssh/cicdpipeline.pem ubuntu@ec2-3-93-212-44.compute-1.amazonaws.com 'bash -s' < deploy.sh
