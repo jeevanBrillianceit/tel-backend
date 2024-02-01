@@ -1,23 +1,27 @@
-name: CD Pipeline
+name: CD
 
 on:
   workflow_run:
-    workflows: ["CI Pipeline"]
+    workflows: ["CI"]
     types:
       - completed
 
 jobs:
-
-  build:
-
-    runs-on: self-hosted
+  deploy:
+    runs-on: ubuntu-latest
 
     steps:
-    - name: Delete Uncessary space
-      run: sudo docker system prune -af
-    - name: Delete Old docker container
-      run: sudo docker rm -f cicd-pipeline-container || true
-    - name: Pull Docker image
-      run: sudo docker pull jeevanbit/cicd-pipeline:latest
-    - name: Run Docker Container
-      run: sudo docker run -d -p 3000:3000 --name cicd-pipeline-container jeevanbit/cicd-pipeline
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Save EC2 private key
+      run: echo "${{ secrets.EC2_PRIVATE_KEY }}" | base64 --decode > ~/.ssh/ec2-private-key.pem
+      shell: bash
+
+    - name: Set up SSH agent
+      run: |
+        eval "$(ssh-agent -s)"
+        ssh-add ~/.ssh/ec2-private-key.pem
+
+    - name: Deploy to EC2
+      run: ssh -o StrictHostKeyChecking=no -l ${{ secrets.EC2_USERNAME }} ${{ secrets.EC2_HOST }} 'bash -s' < deploy.sh
