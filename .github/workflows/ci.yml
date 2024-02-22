@@ -1,51 +1,24 @@
-name: CI
+name: CI Pipeline
 
 on:
   push:
-    branches:
-      - main
+    branches: [ "main" ]
 
 jobs:
+
   build:
+
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
-
-    - name: Set up Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: "16.20.1"
-
-    - name: Install dependencies
-      run: npm install
-
-    - name: Build Docker image
+    - uses: actions/checkout@v3
+    - name: Login Dockerhub
+      env:
+        DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
+        DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
+      run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+      
+    - name: Build the Docker image
       run: docker build -t jeevanbit/cicd-pipeline .
-
-    - name: Set up SSH agent and Docker in Docker
-      run: |
-        eval "$(ssh-agent -s)"
-        ssh-keyscan -t rsa,ed25519 ec2-3-93-212-44.compute-1.amazonaws.com >> ~/.ssh/known_hosts
-        echo "${{ secrets.EC2_PRIVATE_KEY }}" | base64 --decode > ~/.ssh/cicdpipeline.pem && chmod 600 ~/.ssh/cicdpipeline.pem
-        ssh-add ~/.ssh/cicdpipeline.pem
-        docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
-        docker buildx create --use
-        docker info
-        docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-
-    - name: Push Docker image
-      run: docker push jeevanbit/cicd-pipeline
-
-    - name: Save EC2 private key
-      run: echo "${{ secrets.EC2_PRIVATE_KEY }}" | base64 --decode > ~/.ssh/cicdpipeline.pem && chmod 600 ~/.ssh/cicdpipeline.pem
-      shell: bash
-
-    - name: Set up SSH agent (again after Docker setup)
-      run: |
-        eval "$(ssh-agent -s)"
-        ssh-add ~/.ssh/cicdpipeline.pem
-
-    - name: Deploy to EC2
-      run: ssh -o StrictHostKeyChecking=no -i ~/.ssh/cicdpipeline.pem ubuntu@ec2-3-93-212-44.compute-1.amazonaws.com 'bash -s' < deploy.sh
+    - name: Push to Dockerhub
+      run: docker push jeevanbit/cicd-pipeline:latest
