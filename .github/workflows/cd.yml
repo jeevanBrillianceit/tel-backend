@@ -1,26 +1,23 @@
-name: CD
+name: CD Pipeline
 
 on:
   workflow_run:
-    workflows: ["CI"]
+    workflows: ["CI Pipeline"]
     types:
       - completed
 
 jobs:
-  deploy:
-    runs-on: ubuntu-latest
+
+  build:
+
+    runs-on: self-hosted
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
-
-    - name: Set up Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: "16.20.1"
-
-    - name: Install dependencies
-      run: npm install
-
-    - name: Deploy to EC2
-      run: ./deploy.sh
+    - name: Delete Uncessary space
+      run: sudo docker system prune -af
+    - name: Delete Old docker container
+      run: sudo docker rm -f cicd-pipeline-container || true
+    - name: Pull Docker image
+      run: sudo docker pull jeevanbit/cicd-pipeline:latest
+    - name: Run Docker Container
+      run: sudo docker run -d -p 3000:3000 --name cicd-pipeline-container jeevanbit/cicd-pipeline
